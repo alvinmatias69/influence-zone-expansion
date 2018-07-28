@@ -1,0 +1,10 @@
+[package]
+name = "influence_zone"
+version = "0.1.0"
+authors = ["Matias Alvin <alvinmatias@protonmail.com>"]
+
+[dependencies]
+rand = "0.5"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
