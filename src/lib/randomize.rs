@@ -2,7 +2,6 @@ use rand;
 use rand::Rng;
 
 use super::data::Point;
-use super::common;
 
 pub fn point(bound: f64) -> Point {
   Point {

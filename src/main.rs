@@ -4,7 +4,7 @@ extern crate serde_derive;
 extern crate rand;
 extern crate serde_json;
 
-use std::time::{Duration, SystemTime};
+use std::time::SystemTime;
 
 mod lib;
 use lib::data::{Point, Segment};
@@ -13,7 +13,10 @@ use lib::randomize;
 use lib::output;
 
 fn main() {
-    generate_zone(1001);
+    output::create_time_file();
+    generate_mul(21, 500)
+    // generate(1001);
+    // compute(2000);
     // let object: Point = randomize::point(bound);
 
     // let value: usize = influence_zone::query(&query_point, &zone, &object);
@@ -21,30 +24,31 @@ fn main() {
     // println!("{:?}", start.elapsed().unwrap());
 }
 
-fn generate_zone(count_total: usize) {
-    let bound = 10.0;
-
-    let mut query_point: Point;
-    let mut interest_points: Vec<Point> = Vec::new();
-    let mut start: SystemTime;
-    let mut time: Duration;
-    let mut zone: Vec<Vec<Segment>>;
-
-    output::create_time_file();
-
-    for count in 2..count_total {
-        query_point = randomize::point(bound);
-        interest_points.clear();
-
-        for _ in 0..count {
-            interest_points.push(randomize::point(bound));
-        }
-
-        start = SystemTime::now();
-        zone = influence_zone::compute(&query_point, &interest_points, bound);
-        time = start.elapsed().unwrap();
-
-        output::save_output(&query_point, &interest_points, &zone, &time);
-        output::save_time(count, time)
+fn generate_mul(total: usize, multiplier: usize) {
+    for count in 1..total {
+        compute(count * multiplier);
     }
+}
+
+fn generate(total: usize) {
+    for count in 2..total {
+        compute(count);
+    }
+}
+
+fn compute(count: usize) {
+    let bound = 10.0;
+    let query_point: Point = randomize::point(bound);
+    let mut interest_points: Vec<Point> = Vec::new();
+
+    for _ in 0..count {
+        interest_points.push(randomize::point(bound));
+    }
+
+    let start = SystemTime::now();
+    let zone: Vec<Vec<Segment>> = influence_zone::compute(&query_point, &interest_points, bound);
+    let time = start.elapsed().unwrap();
+
+    output::save_output(&query_point, &interest_points, &zone, &time);
+    output::save_time(count, time);
 }
