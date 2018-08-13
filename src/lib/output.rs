@@ -45,10 +45,11 @@ pub fn create_time_file() {
   let mut file = OpenOptions::new()
     .write(true)
     .create(true)
+    .truncate(true)
     .open("./time.csv")
     .unwrap();
 
-  if let Err(e) = writeln!(file, "count,seconds,nano") {
+  if let Err(e) = writeln!(file, "interest points,seconds,nano") {
     eprintln!("Couldn't write to file: {}", e);
   }
 }
@@ -57,6 +58,58 @@ pub fn save_time(count: usize, time: Duration) {
   let mut file = OpenOptions::new().append(true).open("./time.csv").unwrap();
 
   if let Err(e) = writeln!(file, "{},{},{}", count, time.as_secs(), time.subsec_nanos()) {
+    eprintln!("Couldn't write to file: {}", e);
+  }
+}
+
+pub fn create_segment_file() {
+  let mut file = OpenOptions::new()
+    .write(true)
+    .create(true)
+    .truncate(true)
+    .open("./segment.csv")
+    .unwrap();
+
+  if let Err(e) = writeln!(file, "interest points,segment") {
+    eprintln!("Couldn't write to file: {}", e);
+  }
+}
+
+pub fn save_segment_average(interests: usize, average: usize) {
+  let mut file = OpenOptions::new()
+    .append(true)
+    .open("./segment.csv")
+    .unwrap();
+
+  if let Err(e) = writeln!(file, "{},{}", interests, average) {
+    eprintln!("Couldn't write to file: {}", e);
+  }
+}
+
+pub fn create_query_file() {
+  let mut file = OpenOptions::new()
+    .write(true)
+    .create(true)
+    .truncate(true)
+    .open("./query.csv")
+    .unwrap();
+
+  if let Err(e) = writeln!(file, "k,objects,second,nano") {
+    eprintln!("Couldn't write to file: {}", e);
+  }
+}
+
+pub fn save_query_time(k: usize, objects: usize, time: Duration) {
+  let mut file = OpenOptions::new().append(true).open("./query.csv").unwrap();
+
+  if let Err(e) = writeln!(
+    file,
+    "{},{},{},{}",
+    k,
+    objects,
+    time.as_secs(),
+    time.subsec_nanos()
+  ) {
     eprintln!("Couldn't write to file: {}", e);
   }
 }

@@ -40,25 +40,20 @@ fn count_intersection(segment: &Segment, bisector: &Vec<Line>) -> usize {
   count
 }
 
-pub fn query(query_point: &Point, zone: &Vec<Vec<Segment>>, object: &Point) -> usize {
-  let mut intersect: bool = true;
-  let mut k: usize = 0;
-
+pub fn query(query_point: &Point, zone: &Vec<Vec<Segment>>, object: &Point, k: usize) -> bool {
   let query_segment: Segment = Segment {
     start: query_point.clone(),
     end: object.clone(),
     from: 0,
   };
 
-  while intersect && k < zone.len() {
-    intersect = false;
-    for item in &zone[k] {
-      if intersection::segment(&query_segment, &item) {
-        intersect = true;
-      }
-    }
-    k = k + 1;
+  let mut intersect: bool = false;
+  let mut index = 0;
+
+  while !intersect && index < zone[k].len() {
+    intersect = intersection::segment(&query_segment, &zone[k][index]);
+    index = index + 1;
   }
 
-  k
+  !intersect
 }
