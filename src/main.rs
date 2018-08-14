@@ -20,10 +20,21 @@ fn main() {
 
     output::create_time_file();
     output::create_segment_file();
-    generate_mul(4, 500);
+    output::create_size_file();
+    generate_mul_start(100, 10, 100);
+
+    // generate_mul(4, 500);
 
     // output::create_query_file();
     // compute_k(4000, 200, 10000);
+}
+
+fn generate_mul_start(start: usize, total: usize, multiplier: usize) {
+    let mut query_point: Point;
+    for count in 1..total + 1 {
+        query_point = randomize::point(10.0);
+        compute(count * multiplier + start, &query_point);
+    }
 }
 
 fn generate_mul(total: usize, multiplier: usize) {
@@ -116,6 +127,7 @@ fn compute(count: usize, query_point: &Point) -> Vec<Vec<Segment>> {
 
     output::save_time(count, time);
     output::save_segment_average(count, average);
-    output::save_output(&query_point, &interest_points, &zone, &time);
+    output::save_file_size(count, average);
+    // output::save_output(&query_point, &interest_points, &zone, &time);
     zone
 }

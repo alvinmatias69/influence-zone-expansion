@@ -113,3 +113,26 @@ pub fn save_query_time(k: usize, objects: usize, time: Duration) {
     eprintln!("Couldn't write to file: {}", e);
   }
 }
+
+pub fn create_size_file() {
+  let mut file = OpenOptions::new()
+    .write(true)
+    .create(true)
+    .truncate(true)
+    .open("./size.csv")
+    .unwrap();
+
+  if let Err(e) = writeln!(file, "k,size") {
+    eprintln!("Couldn't write to file: {}", e);
+  }
+}
+
+pub fn save_file_size(k: usize, avg_segment: usize) {
+  let size: f64 = k as f64 * avg_segment as f64 * 0.000103;
+
+  let mut file = OpenOptions::new().append(true).open("./size.csv").unwrap();
+
+  if let Err(e) = writeln!(file, "{},{}", k, size) {
+    eprintln!("Couldn't write to file: {}", e);
+  }
+}
