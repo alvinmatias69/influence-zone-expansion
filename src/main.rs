@@ -18,15 +18,41 @@ fn main() {
     // let data_count: [usize; 8] = [1, 100, 500, 1000, 1500, 2000, 2500, 3000];
     // compute_object_k(&data_count);
 
-    output::create_time_file();
-    output::create_segment_file();
-    output::create_size_file();
-    generate_mul_start(100, 10, 100);
+    // output::create_time_file();
+    // output::create_segment_file();
+    // output::create_size_file();
+    // generate_mul_start(100, 10, 100);
 
     // generate_mul(4, 500);
 
     // output::create_query_file();
     // compute_k(4000, 200, 10000);
+
+    generate_mul_start_csv(1, 10, 1);
+}
+
+fn generate_mul_start_csv(start: usize, total: usize, multiplier: usize) {
+    let mut query_point: Point;
+    for count in 1..total + 1 {
+        query_point = randomize::point(10.0);
+        compute_partial(count * multiplier + start, &query_point);
+    }
+}
+
+fn compute_partial(count: usize, query_point: &Point) {
+    let bound = 10.0;
+    let mut interest_points: Vec<Point> = Vec::new();
+
+    for _ in 0..count {
+        interest_points.push(randomize::point(bound));
+    }
+
+    output::create_folder(count);
+    output::create_query_csv(count, &query_point);
+    output::create_interest_csv(&interest_points);
+    output::create_zone_csv(count);
+
+    influence_zone::compute_partial(&query_point, &interest_points, bound);
 }
 
 fn generate_mul_start(start: usize, total: usize, multiplier: usize) {

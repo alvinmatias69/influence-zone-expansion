@@ -29,6 +29,21 @@ pub fn generate(lines: &Vec<Line>, bound: f64) -> Vec<Vec<Point>> {
   points
 }
 
+pub fn generate_partial(lines: &Vec<Line>, bound: f64, index: usize) -> Vec<Point> {
+  let mut intersections: Vec<Point> = Vec::new();
+
+  for (inner, line) in lines.iter().enumerate() {
+    if inner != index {
+      intersections.push(compute(&lines[index], &line));
+    }
+  }
+
+  intersections.extend(compute_bound(&lines[index], bound));
+
+  let result = sort(&remove_outside_bound(&intersections, bound));
+  result
+}
+
 pub fn compute(line_1: &Line, line_2: &Line) -> Point {
   let x: f64 = calculate_x(&line_1, &line_2);
   let y: f64 = line_1.m.mul_add(x, line_1.c);

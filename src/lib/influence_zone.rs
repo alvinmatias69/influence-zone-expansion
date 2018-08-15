@@ -2,6 +2,7 @@ use super::data::{Line, Point, Segment};
 use super::perpendicular_bisector;
 use super::intersection;
 use super::segment;
+use super::output;
 
 pub fn compute(query_point: &Point, interest_points: &Vec<Point>, bound: f64) -> Vec<Vec<Segment>> {
   let bisector: Vec<Line> = perpendicular_bisector::generate(&query_point, &interest_points);
@@ -28,6 +29,35 @@ pub fn compute(query_point: &Point, interest_points: &Vec<Point>, bound: f64) ->
   }
 
   zone
+}
+
+pub fn compute_partial(query_point: &Point, interest_points: &Vec<Point>, bound: f64) {
+  let bisector: Vec<Line> = perpendicular_bisector::generate(&query_point, &interest_points);
+  let mut intersect: Vec<Point> = Vec::new();
+  let mut segments: Vec<Segment> = Vec::new();
+  let mut query_segment: Segment;
+
+  for (index, _) in bisector.iter().enumerate() {
+    intersect.clear();
+    segments.clear();
+
+    intersect.extend(intersection::generate_partial(&bisector, bound, index));
+    segments.extend(segment::compute(&intersect, index));
+
+    for segment in segments.iter() {
+      query_segment = Segment {
+        start: query_point.clone(),
+        end: segment::mid_point(&segment),
+        from: index,
+      };
+
+      output::save_zone_csv(
+        interest_points.len(),
+        &segment,
+        count_intersection(&query_segment, &bisector),
+      );
+    }
+  }
 }
 
 fn count_intersection(segment: &Segment, bisector: &Vec<Line>) -> usize {
