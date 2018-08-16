@@ -28,7 +28,8 @@ fn main() {
     // output::create_query_file();
     // compute_k(4000, 200, 10000);
 
-    generate_mul_start_csv(1, 10, 1);
+    output::create_time_file();
+    generate_mul_start_csv(9000, 11, 1000);
 }
 
 fn generate_mul_start_csv(start: usize, total: usize, multiplier: usize) {
@@ -52,7 +53,11 @@ fn compute_partial(count: usize, query_point: &Point) {
     output::create_interest_csv(&interest_points);
     output::create_zone_csv(count);
 
+    let start: SystemTime = SystemTime::now();
     influence_zone::compute_partial(&query_point, &interest_points, bound);
+    let time: Duration = start.elapsed().unwrap();
+
+    output::save_time(count, time);
 }
 
 fn generate_mul_start(start: usize, total: usize, multiplier: usize) {
