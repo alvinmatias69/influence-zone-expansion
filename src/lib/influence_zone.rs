@@ -36,10 +36,12 @@ pub fn compute_partial(query_point: &Point, interest_points: &Vec<Point>, bound:
   let mut intersect: Vec<Point> = Vec::new();
   let mut segments: Vec<Segment> = Vec::new();
   let mut query_segment: Segment;
+  let mut labeled_segment: Vec<(Segment, usize)> = Vec::new();
 
   for (index, _) in bisector.iter().enumerate() {
     intersect.clear();
     segments.clear();
+    labeled_segment.clear();
 
     intersect.extend(intersection::generate_partial(&bisector, bound, index));
     segments.extend(segment::compute(&intersect, index));
@@ -51,12 +53,13 @@ pub fn compute_partial(query_point: &Point, interest_points: &Vec<Point>, bound:
         from: index,
       };
 
-      output::save_zone_csv(
-        interest_points.len(),
-        &segment,
+      labeled_segment.push((
+        segment.clone(),
         count_intersection(&query_segment, &bisector),
-      );
+      ));
     }
+
+    output::save_zone_csv(interest_points.len(), &labeled_segment);
   }
 }
 

@@ -29,7 +29,7 @@ fn main() {
     // compute_k(4000, 200, 10000);
 
     output::create_time_file();
-    generate_mul_start_csv(9000, 11, 1000);
+    generate_mul_start_csv(0, 10, 100);
 }
 
 fn generate_mul_start_csv(start: usize, total: usize, multiplier: usize) {

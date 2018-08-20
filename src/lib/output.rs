@@ -197,7 +197,7 @@ pub fn create_zone_csv(interest_points: usize) {
   writeln!(file, "x1,y1,x2,y2,k").unwrap();
 }
 
-pub fn save_zone_csv(interest_points: usize, segment: &Segment, k: usize) {
+pub fn save_zone_csv(interest_points: usize, labeled_segment: &Vec<(Segment, usize)>) {
   let mut path: String = String::new();
   path.push_str("./output/");
   path.push_str(&interest_points.to_string());
@@ -210,9 +210,11 @@ pub fn save_zone_csv(interest_points: usize, segment: &Segment, k: usize) {
     .open(path)
     .unwrap();
 
-  writeln!(
-    file,
-    "{},{},{},{},{}",
-    segment.start.x, segment.start.y, segment.end.x, segment.end.y, k
-  );
+  for data in labeled_segment.iter() {
+    writeln!(
+      file,
+      "{},{},{},{},{}",
+      data.0.start.x, data.0.start.y, data.0.end.x, data.0.end.y, data.1
+    );
+  }
 }
